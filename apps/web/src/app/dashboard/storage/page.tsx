@@ -57,7 +57,7 @@ const mockFiles: Record<string, StorageFile[]> = {
 
 export default function StoragePage() {
   const [buckets, setBuckets] = useState<Bucket[]>(mockBuckets);
-  const [selectedBucket, setSelectedBucket] = useState<Bucket>(mockBuckets[0]);
+  const [selectedBucket, setSelectedBucket] = useState<Bucket>(mockBuckets[0]!);
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 

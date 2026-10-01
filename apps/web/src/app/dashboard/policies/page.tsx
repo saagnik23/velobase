@@ -68,7 +68,7 @@ const mockPolicies: RlsPolicy[] = [
 
 export default function PoliciesPage() {
   const [policies, setPolicies] = useState<RlsPolicy[]>(mockPolicies);
-  const [selectedPolicy, setSelectedPolicy] = useState<RlsPolicy>(mockPolicies[0]);
+  const [selectedPolicy, setSelectedPolicy] = useState<RlsPolicy>(mockPolicies[0]!);
   const [showSql, setShowSql] = useState(false);
 
   return (

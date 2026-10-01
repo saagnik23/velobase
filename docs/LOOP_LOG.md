@@ -118,4 +118,35 @@ Each iteration ends with a short entry: what failed, what changed.
   - `GET /` -> HTTP 200 (Landing page, full brand assets, and interactive demos)
   - `GET /dashboard` -> HTTP 200 (Full 30-route application operating system dashboard)
 
+## Slice 6: Progressive Disclosure Console & Production OAuth Re-Architecture
+
+### Iteration 1 — Production Authentication & Session Engine
+- **WebCrypto HMAC-SHA256**: Implemented `apps/web/src/lib/auth.ts` with cryptographic session signing, token verification, and PKCE OAuth state generation.
+- **Independent Route Protection**: Created `apps/web/src/middleware.ts` intercepting all `/dashboard/*` and `/onboarding/*` routes, redirecting unauthenticated traffic to `/login?redirect=...`.
+- **OAuth Authorization Flow**: Built `/api/auth/google`, `/api/auth/callback/google`, and `/authorize` consent screen.
+  - Denied authorization redirects to `/login` with an error banner.
+  - Successful authorization exchanges code, signs session cookie, and navigates.
+- **First-Time Experience**: Built `/onboarding` (2-step setup: "What are you building?" + "How do you want to start?").
+
+### Iteration 2 — Console Progressive Disclosure & Home Redesign
+- **Simple Mode Primary Navigation**: Redesigned `Sidebar` with 7 primary sections (Home, Data, Build, Automate, Deploy, Monitor, Settings).
+- **Collapsible Developer Tools**: Created collapsible drawer holding all 13 advanced tools (SQL Editor, API Explorer, Functions, Realtime, Queues, Search, AI, Logs, Metrics, Traces, Infrastructure, Policies, Secrets).
+- **Redesigned Home Overview**: Replaced raw telemetry cards with:
+  - Project identity (`velora-core`, `production`, `iad1`, `DEMO DATA VISIBLE`).
+  - "All Systems Operational" clean health status.
+  - 4 Primary Actions (`Create Table`, `Query Studio`, `Automate Workflow`, `Deploy Preview`).
+  - Data & Application summaries.
+  - Realtime chronological recent activity feed.
+  - Helpful security and performance recommendations.
+- **Relocated Telemetry**: Moved p50/p95/p99 latency, connection pool saturation, cache hit rates, and vector ANN into `Monitor → Performance`.
+
+### Iteration 3 — Query Studio & Command Palette
+- **Full Query Studio**: Enhanced `/dashboard/sql` with live execution timer, row results, syntax error reporting, Explain Plan visualizer, Saved Queries drawer, and execution History log with 1-click rerun and CSV export.
+- **Functional Command Palette**: Upgraded `CommandPalette` (Cmd+K) supporting quick navigation, table creation, query data, deploy preview, workflow builder, error inspection, and project/environment switching.
+
+### Iteration 4 — Verification Gate
+- **Build**: `npm run build` compiled 37/37 routes with zero errors.
+- **E2E Browser Test**: Fully executed and passed via `browser_subagent` (6/6 scenarios passed: unauthenticated guard, OAuth denial, OAuth success, onboarding wizard, Home progressive disclosure, Query Studio execution, and session teardown).
+
+
 

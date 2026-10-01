@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/providers/auth-provider';
 import {
   Search,
   Bell,
@@ -39,6 +40,7 @@ function useClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () =
 
 export function TopBar({ onOpenCmd }: TopBarProps) {
   const router = useRouter();
+  const { user, logout } = useAuth();
   const [projectOpen, setProjectOpen] = useState(false);
   const [envOpen, setEnvOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -288,8 +290,8 @@ export function TopBar({ onOpenCmd }: TopBarProps) {
           {profileOpen && (
             <div className="absolute right-0 mt-1.5 w-56 rounded-lg bg-surface border border-white/[0.1] shadow-2xl p-1 z-50">
               <div className="px-3 py-2 border-b border-white/[0.06]">
-                <div className="text-xs font-medium text-white">Saagnik Dey</div>
-                <div className="text-[11px] text-white/40 font-mono">saagnik@velora.dev</div>
+                <div className="text-xs font-medium text-white">{user?.name || 'Velora Engineer'}</div>
+                <div className="text-[11px] text-white/40 font-mono">{user?.email || 'developer@velora.internal'}</div>
               </div>
               <div className="py-1">
                 <button
@@ -316,7 +318,10 @@ export function TopBar({ onOpenCmd }: TopBarProps) {
               </div>
               <div className="border-t border-white/[0.06] pt-1">
                 <button
-                  onClick={() => { setProfileOpen(false); router.push('/login'); }}
+                  onClick={async () => {
+                    setProfileOpen(false);
+                    await logout();
+                  }}
                   className="w-full text-left px-3 py-1.5 rounded text-xs text-rose-400 hover:bg-rose-500/10 flex items-center gap-2"
                 >
                   <LogOut className="w-3.5 h-3.5" />

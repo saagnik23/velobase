@@ -102,7 +102,7 @@ export default serve(async (req) => {
 ];
 
 export default function FunctionsPage() {
-  const [selectedFn, setSelectedFn] = useState<EdgeFunction>(mockFunctions[0]);
+  const [selectedFn, setSelectedFn] = useState<EdgeFunction>(mockFunctions[0]!);
   const [testPayload, setTestPayload] = useState('{\n  "event": "checkout.session.completed",\n  "amount_total": 4900\n}');
   const [isExecuting, setIsExecuting] = useState(false);
   const [testOutput, setTestOutput] = useState<string | null>(null);
