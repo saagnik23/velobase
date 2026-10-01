@@ -253,9 +253,9 @@ export default function SqlEditorPage() {
               <div className="p-4 space-y-3 font-mono text-xs">
                 <div className="p-3 rounded-lg bg-basalt border border-white/[0.08] text-white/80 space-y-1">
                   <div className="text-saffron font-bold">Limit (cost=0.29..4.81 rows=10 width=84) (actual time=0.015..0.022 rows=5 loops=1)</div>
-                  <div className="text-white/60 pl-4">-> Sort (cost=0.29..0.30 rows=5 width=84)</div>
-                  <div className="text-white/60 pl-8">-> HashAggregate (cost=0.18..0.23 rows=5 width=84)</div>
-                  <div className="text-white/60 pl-12">-> Index Scan using users_pkey on users u (cost=0.15..0.17 rows=5 width=76)</div>
+                  <div className="text-white/60 pl-4">-&gt; Sort (cost=0.29..0.30 rows=5 width=84)</div>
+                  <div className="text-white/60 pl-8">-&gt; HashAggregate (cost=0.18..0.23 rows=5 width=84)</div>
+                  <div className="text-white/60 pl-12">-&gt; Index Scan using users_pkey on users u (cost=0.15..0.17 rows=5 width=76)</div>
                   <div className="text-emerald-400 text-[11px] pt-2">Planning Time: 0.051 ms · Execution Time: 0.038 ms</div>
                 </div>
               </div>
