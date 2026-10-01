@@ -1,0 +1,13 @@
+.git
+.github
+.turbo
+.next
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+*.tsbuildinfo
+deploy
+docs
+tests
+*.md
