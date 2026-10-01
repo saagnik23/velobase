@@ -48,3 +48,30 @@ Each iteration ends with a short entry: what failed, what changed.
   - **Settings**: Project credentials (anon/service_role keys) and PgBouncer connection strings.
 - **Verification Gate**: All 22 dashboard routes + 3 auth routes + landing page verified with HTTP 200 via curl.
 
+---
+
+## Slice 3: Containerization & Production Deployment Pipeline
+
+### Iteration 3 — Docker, Kubernetes & GitHub Actions
+- **Status**: Complete
+- **Created GitHub Repository**: [saagnik23/velobase](https://github.com/saagnik23/velobase)
+- **Container Infrastructure**:
+  - `Dockerfile.web`: Multi-stage standalone Next.js production build with non-root security context.
+  - `Dockerfile.api`: Production container for Edge API Gateway with health check probe.
+  - `docker-compose.yml`: Local full stack orchestration (web, api-gateway, postgres with `pgvector`, redis, minio object storage).
+- **Kubernetes Production Suite (`deploy/k8s/`)**:
+  - Zero-downtime rolling update strategy (`maxSurge: 25%`, `maxUnavailable: 0`).
+  - HorizontalPodAutoscaler (3-30 pods) and PodDisruptionBudget (`minAvailable: 66%`).
+  - TLS Ingress with cert-manager integration and zero-trust NetworkPolicies.
+  - Continuous database backup CronJob (`0 */6 * * *`) for disaster recovery.
+  - Environment overlays for `development`, `staging`, and `production`.
+  - Production Helm Chart package (`deploy/helm/velora/`).
+- **CI/CD Pipeline**:
+  - `.github/workflows/ci.yml`: Automated build and typecheck verification.
+  - `.github/workflows/deploy.yml`: GHCR container publishing and Kustomize overlay validation.
+- **Verification Gate**:
+  - GitHub Actions CI & Deploy runs verified: **Passed**.
+  - All 27 application routes verified with HTTP 200 via automated test suite.
+  - Standalone build verified with zero errors.
+
+

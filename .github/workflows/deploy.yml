@@ -6,8 +6,8 @@ on:
     tags: ['v*']
 
 jobs:
-  docker-build:
-    name: Build & Push Container Images
+  docker-build-and-push:
+    name: Build & Push Container Images to GHCR
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -29,15 +29,30 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Web Application Container
+      - name: Build and Push Web Container
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./deploy/docker/Dockerfile.web
-          push: false # Set to true when deploying with active package write tokens
-          tags: ghcr.io/${{ github.repository }}-web:latest
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-web:latest
+            ghcr.io/${{ github.repository }}-web:${{ github.sha }}
 
-      - name: Validate Kubernetes Manifests with Kubeval / Kustomize
+      - name: Build and Push API Gateway Container
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deploy/docker/Dockerfile.api
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-api:latest
+            ghcr.io/${{ github.repository }}-api:${{ github.sha }}
+
+      - name: Validate Kubernetes Manifests
         run: |
-          mkdir -p build-out
-          echo "Validating kustomize manifests..."
+          echo "Validating Kubernetes base & environment overlays..."
+          kubectl kustomize deploy/k8s/overlays/development
+          kubectl kustomize deploy/k8s/overlays/staging
+          kubectl kustomize deploy/k8s/overlays/production
+          echo "All Kustomize overlays validated successfully!"
