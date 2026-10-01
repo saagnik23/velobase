@@ -1,0 +1,30 @@
+{
+  "name": "@velora/brand",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VELORA brand assets: logo SVGs, design tokens, color palette, typography",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js"
+    },
+    "./tokens.css": "./tokens.css",
+    "./logo.svg": "./assets/logo.svg",
+    "./mark.svg": "./assets/mark.svg"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

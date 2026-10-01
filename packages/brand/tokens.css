@@ -1,0 +1,160 @@
+/*
+ * VELORA Design Tokens — CSS Custom Properties
+ *
+ * Generated from @velora/brand. Import in your global stylesheet:
+ *   @import '@velora/brand/tokens.css';
+ *
+ * Palette: light-first, dark equal. Saffron is the one accent.
+ */
+
+:root {
+  /* ─── Colors ────────────────────────────────────── */
+  --v-salt: #F5F5F2;
+  --v-graphite: #1B1C1E;
+  --v-basalt: #131412;
+  --v-ash: #E4E4DF;
+  --v-slate: #2A2B2D;
+  --v-saffron: #F2A900;
+  --v-moss: #2F6B4F;
+  --v-brick: #D8402F;
+
+  --v-saffron-hover: #E09D00;
+  --v-saffron-active: #CC8F00;
+  --v-saffron-subtle: rgba(242, 169, 0, 0.12);
+  --v-saffron-muted: rgba(242, 169, 0, 0.06);
+
+  --v-moss-subtle: rgba(47, 107, 79, 0.12);
+  --v-moss-border: rgba(47, 107, 79, 0.35);
+  --v-brick-subtle: rgba(216, 64, 47, 0.12);
+  --v-brick-border: rgba(216, 64, 47, 0.35);
+
+  /* Neutral scale */
+  --v-neutral-50: #FAFAF8;
+  --v-neutral-100: #F5F5F2;
+  --v-neutral-200: #E4E4DF;
+  --v-neutral-300: #C8C8C2;
+  --v-neutral-400: #9B9B94;
+  --v-neutral-500: #6E6E68;
+  --v-neutral-600: #4A4A46;
+  --v-neutral-700: #2A2B2D;
+  --v-neutral-800: #1B1C1E;
+  --v-neutral-900: #131412;
+
+  /* ─── Typography ────────────────────────────────── */
+  --v-font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --v-font-body: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --v-font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  --v-text-xs: 0.6875rem;
+  --v-text-sm: 0.8125rem;
+  --v-text-base: 0.875rem;
+  --v-text-md: 1rem;
+  --v-text-lg: 1.125rem;
+  --v-text-xl: 1.25rem;
+  --v-text-2xl: 1.5rem;
+  --v-text-3xl: 1.875rem;
+  --v-text-4xl: 2.25rem;
+  --v-text-5xl: 3rem;
+  --v-text-6xl: 3.75rem;
+  --v-text-7xl: 4.5rem;
+
+  /* ─── Spacing ───────────────────────────────────── */
+  --v-space-0: 0;
+  --v-space-1: 0.25rem;
+  --v-space-2: 0.5rem;
+  --v-space-3: 0.75rem;
+  --v-space-4: 1rem;
+  --v-space-5: 1.25rem;
+  --v-space-6: 1.5rem;
+  --v-space-8: 2rem;
+  --v-space-10: 2.5rem;
+  --v-space-12: 3rem;
+  --v-space-16: 4rem;
+  --v-space-20: 5rem;
+  --v-space-24: 6rem;
+
+  /* ─── Radii (vary by hierarchy) ─────────────────── */
+  --v-radius-sm: 4px;
+  --v-radius-md: 6px;
+  --v-radius-lg: 10px;
+  --v-radius-xl: 14px;
+  --v-radius-2xl: 20px;
+  --v-radius-full: 9999px;
+
+  /* ─── Shadows ───────────────────────────────────── */
+  --v-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --v-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --v-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.16);
+  --v-shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --v-shadow-saffron: 0 0 24px rgba(242, 169, 0, 0.3);
+  --v-shadow-saffron-sm: 0 0 12px rgba(242, 169, 0, 0.2);
+  --v-shadow-focus: 0 0 0 2px rgba(242, 169, 0, 0.4);
+
+  /* ─── Motion ────────────────────────────────────── */
+  --v-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --v-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --v-duration-fast: 120ms;
+  --v-duration-normal: 200ms;
+  --v-duration-slow: 350ms;
+  --v-transition-fast: 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  --v-transition-normal: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  --v-transition-slow: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ─── Z-Index ───────────────────────────────────── */
+  --v-z-base: 0;
+  --v-z-dropdown: 50;
+  --v-z-sticky: 100;
+  --v-z-overlay: 200;
+  --v-z-modal: 300;
+  --v-z-popover: 400;
+  --v-z-toast: 500;
+  --v-z-tooltip: 600;
+  --v-z-cmd: 700;
+}
+
+/* ─── Light theme (default) ───────────────────────── */
+:root,
+[data-theme="light"] {
+  --v-bg-page: var(--v-salt);
+  --v-bg-surface: #FFFFFF;
+  --v-bg-raised: #FAFAF8;
+  --v-bg-overlay: rgba(27, 28, 30, 0.5);
+  --v-bg-active: var(--v-ash);
+
+  --v-text-1: var(--v-graphite);
+  --v-text-2: var(--v-neutral-500);
+  --v-text-3: var(--v-neutral-400);
+
+  --v-border-1: var(--v-ash);
+  --v-border-2: var(--v-neutral-300);
+  --v-border-focus: var(--v-saffron);
+}
+
+/* ─── Dark theme ──────────────────────────────────── */
+[data-theme="dark"] {
+  --v-bg-page: var(--v-basalt);
+  --v-bg-surface: var(--v-graphite);
+  --v-bg-raised: var(--v-slate);
+  --v-bg-overlay: rgba(0, 0, 0, 0.6);
+  --v-bg-active: #353638;
+
+  --v-text-1: var(--v-salt);
+  --v-text-2: var(--v-neutral-400);
+  --v-text-3: var(--v-neutral-500);
+
+  --v-border-1: rgba(255, 255, 255, 0.08);
+  --v-border-2: rgba(255, 255, 255, 0.14);
+  --v-border-focus: var(--v-saffron);
+}
+
+/* ─── Reduced motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --v-duration-fast: 0ms;
+    --v-duration-normal: 0ms;
+    --v-duration-slow: 0ms;
+    --v-transition-fast: 0ms;
+    --v-transition-normal: 0ms;
+    --v-transition-slow: 0ms;
+  }
+}
