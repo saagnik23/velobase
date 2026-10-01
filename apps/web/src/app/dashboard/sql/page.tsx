@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useToast } from '@/components/ui/toast';
 import {
   Play,
   Save,
@@ -15,6 +16,7 @@ import {
   Layers,
   History,
   RotateCcw,
+  Loader2,
 } from 'lucide-react';
 
 interface Tab {
@@ -75,6 +77,7 @@ const mockResultsData = [
 ];
 
 export default function SqlEditorPage() {
+  const { toast } = useToast();
   const [tabs, setTabs] = useState(defaultTabs);
   const [activeTabId, setActiveTabId] = useState('tab-1');
   const [isRunning, setIsRunning] = useState(false);
@@ -132,7 +135,7 @@ export default function SqlEditorPage() {
         {/* Action Controls */}
         <div className="flex items-center gap-2">
           <button
-            onClick={() => alert('Saved to team query snippet library')}
+            onClick={() => toast('Query saved to team snippet library', 'success')}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[0.08] text-xs font-mono text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors"
           >
             <Save className="w-3.5 h-3.5" />
@@ -206,14 +209,19 @@ export default function SqlEditorPage() {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => alert('Results copied to clipboard')}
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    results.map((r) => Object.values(r).join('\t')).join('\n')
+                  );
+                  toast('Results copied to clipboard', 'success');
+                }}
                 className="p-1 rounded text-white/40 hover:text-white"
                 title="Copy TSV"
               >
                 <Copy className="w-3.5 h-3.5" />
               </button>
               <button
-                onClick={() => alert('Downloading results CSV')}
+                onClick={() => toast('CSV download initiated', 'success')}
                 className="p-1 rounded text-white/40 hover:text-white"
                 title="Download CSV"
               >

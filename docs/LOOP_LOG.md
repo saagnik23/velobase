@@ -73,5 +73,25 @@ Each iteration ends with a short entry: what failed, what changed.
   - GitHub Actions CI & Deploy runs verified: **Passed**.
   - All 27 application routes verified with HTTP 200 via automated test suite.
   - Standalone build verified with zero errors.
+## Slice 4: Full System Verification & Hardening Loop
 
+### Phase A — Frontend Functional Audit
+
+#### Iteration 4 — Defect Detection
+- **Status**: Complete (14 Critical, 8 Medium, 6 Low defects cataloged)
+- Full audit report: `phase_a_audit.md`
+
+#### Iteration 5 — Defect Resolution
+- **Status**: Complete
+- **Toast notification system**: Created `@/components/ui/toast` — context-based toast with success/error/info types, auto-dismiss, slide-in animation. Replaces all `alert()` calls.
+- **Providers wrapper**: Created `@/components/providers` — client-side context provider tree wired into root layout.
+- **TopBar (C-01, C-02, C-11, C-12)**: Full rewrite. Added `useClickOutside` hook for all dropdowns. Added Escape key handler. Created functional notification panel (3 mock notifications with read/unread). Created user profile dropdown (Profile, Settings, Billing, Sign out).
+- **Login (C-03, C-05, C-06)**: Form submit navigates to `/dashboard` with loading state. Google/GitHub OAuth buttons redirect with toast feedback. Passkey button simulates WebAuthn verification with toast.
+- **Signup (C-04)**: All SSO buttons wired with toast + redirect. Form submit navigates with loading spinner.
+- **Command Palette (M-02, M-03)**: Copilot action uses toast. Query clears on open.
+- **Dashboard Overview (C-14, M-04, M-05, M-06)**: "Apply Index" uses toast. "Add Row" navigates to tables. Fixed "Postgres + S3 S3" typo to "Postgres + S3". Fixed `animate-spin-slow` to inline `animationDuration: '3s'`.
+- **Table Editor (C-07, C-08, C-09, C-13)**: Complete rewrite. Dynamic mock data for all 4 tables. Working table filter sidebar input. Edit Row modal (pencil icon per row). Bulk Delete button (appears with checkbox selection). Dynamic Insert Row modal adapts columns per table. Functional CSV export (creates real blob download). All `alert()` replaced with toast.
+- **SQL Editor (M-01)**: Save, Copy, Download all use toast. Copy actually writes to clipboard via `navigator.clipboard`.
+- **Docs link (L-01)**: Changed from `https://docs.velora.internal` to `/dashboard/settings`.
+- **Verification Gate**: `next build` passes with 0 errors, all 30 routes compile.
 

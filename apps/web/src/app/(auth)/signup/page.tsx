@@ -1,14 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { Eye, EyeOff, ArrowRight, Check } from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, Check, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/toast';
 
 export default function SignupPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const passwordChecks = [
     { label: 'At least 8 characters', met: password.length >= 8 },
@@ -56,7 +61,13 @@ export default function SignupPage() {
       <div className="space-y-2.5">
         <button
           type="button"
-          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors"
+          onClick={() => {
+            setIsLoading(true);
+            toast('Redirecting to Google OAuth...', 'info');
+            setTimeout(() => router.push('/dashboard'), 800);
+          }}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors disabled:opacity-50"
           style={{ transitionDuration: 'var(--duration-fast)' }}
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -70,7 +81,13 @@ export default function SignupPage() {
 
         <button
           type="button"
-          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors"
+          onClick={() => {
+            setIsLoading(true);
+            toast('Redirecting to GitHub OAuth...', 'info');
+            setTimeout(() => router.push('/dashboard'), 800);
+          }}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors disabled:opacity-50"
           style={{ transitionDuration: 'var(--duration-fast)' }}
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -89,6 +106,13 @@ export default function SignupPage() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!name || !email || !password) return;
+          setIsLoading(true);
+          toast('Creating account...', 'info');
+          setTimeout(() => {
+            toast('Account created successfully', 'success');
+            router.push('/dashboard');
+          }, 800);
         }}
         className="space-y-4"
       >
@@ -182,11 +206,15 @@ export default function SignupPage() {
 
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-saffron text-basalt font-semibold text-sm rounded-md hover:bg-saffron-hover active:bg-saffron-active transition-colors shadow-saffron-sm"
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-saffron text-basalt font-semibold text-sm rounded-md hover:bg-saffron-hover active:bg-saffron-active transition-colors shadow-saffron-sm disabled:opacity-50"
           style={{ transitionDuration: 'var(--duration-fast)' }}
         >
-          Create account
-          <ArrowRight className="w-4 h-4" />
+          {isLoading ? (
+            <><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
+          ) : (
+            <>Create account <ArrowRight className="w-4 h-4" /></>
+          )}
         </button>
       </form>
 

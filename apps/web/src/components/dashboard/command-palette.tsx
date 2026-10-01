@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/toast';
 import {
   Search,
   Database,
@@ -37,6 +38,7 @@ interface CommandItem {
 
 export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const router = useRouter();
+  const { toast } = useToast();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -113,7 +115,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       sublabel: 'AI architectural synthesis engine',
       icon: <Flame className="w-4 h-4 text-saffron animate-pulse" />,
       action: () => {
-        alert('VELORA Copilot synthesis triggered.');
+        toast('VELORA Copilot synthesis triggered — generating vector search migration...', 'success');
       },
     },
   ];
@@ -126,6 +128,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
   useEffect(() => {
     if (open) {
+      setQuery('');
       setTimeout(() => inputRef.current?.focus(), 50);
       setSelectedIndex(0);
     }

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/toast';
 import {
   Database,
   Terminal,
@@ -28,6 +30,8 @@ import {
 type SystemMode = 'developer' | 'beginner' | 'infrastructure';
 
 export function DashboardOverview() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [activeMode, setActiveMode] = useState<SystemMode>('developer');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [latencyValue, setLatencyValue] = useState(1.18);
@@ -315,8 +319,10 @@ export function DashboardOverview() {
                   <h2 className="text-base font-semibold text-white">Visual Spreadsheet View</h2>
                   <p className="text-xs text-white/50">Edit your data directly with no SQL required</p>
                 </div>
-                <button className="px-3 py-1.5 rounded-lg bg-saffron text-basalt font-medium text-xs">
-                  + Add Row
+                <button
+                  onClick={() => router.push('/dashboard/tables')}
+                  className="px-3 py-1.5 rounded-lg bg-saffron text-basalt font-medium text-xs hover:bg-saffron/90 transition-colors"
+                >
                 </button>
               </div>
               <div className="p-6 rounded-lg bg-basalt border border-white/[0.06] text-center space-y-2">
@@ -392,7 +398,7 @@ export function DashboardOverview() {
                   <div className="text-[10px] font-mono text-saffron">LAYER 3</div>
                   <div className="text-xs font-semibold text-white mt-1">Data Storage</div>
                 </div>
-                <div className="text-[10px] text-white/40 mt-2 font-mono">Postgres + S3 S3</div>
+                <div className="text-[10px] text-white/40 mt-2 font-mono">Postgres + S3</div>
               </div>
               <div className="p-3 rounded-lg bg-basalt border border-white/[0.06] flex flex-col justify-between">
                 <div>
@@ -410,7 +416,7 @@ export function DashboardOverview() {
           {/* Copilot Card */}
           <div className="p-5 rounded-xl bg-gradient-to-b from-surface to-basalt border border-saffron/30 relative overflow-hidden">
             <div className="flex items-center gap-2 text-saffron mb-3">
-              <Sparkles className="w-4 h-4 animate-spin-slow" />
+              <Sparkles className="w-4 h-4 animate-spin" style={{ animationDuration: '3s' }} />
               <span className="text-xs font-mono font-bold tracking-wider uppercase">VELORA Copilot Advisor</span>
             </div>
             <h3 className="text-sm font-semibold text-white">
@@ -421,7 +427,7 @@ export function DashboardOverview() {
             </p>
             <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between">
               <button
-                onClick={() => alert('Index migration queued: CREATE INDEX CONCURRENTLY idx_docs_org_created ON documents(org_id, created_at DESC);')}
+                onClick={() => toast('Index migration queued: CREATE INDEX CONCURRENTLY idx_docs_org_created ON documents(org_id, created_at DESC)', 'success')}
                 className="px-3 py-1.5 rounded-lg bg-saffron text-basalt font-semibold text-xs hover:bg-saffron/90 transition-colors"
               >
                 Apply Index (Zero Downtime)

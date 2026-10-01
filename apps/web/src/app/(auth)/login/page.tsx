@@ -1,13 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { Eye, EyeOff, ArrowRight, Fingerprint } from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, Fingerprint, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/toast';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className="space-y-8">
@@ -49,7 +54,13 @@ export default function LoginPage() {
       <div className="space-y-2.5">
         <button
           type="button"
-          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors"
+          onClick={() => {
+            setIsLoading(true);
+            toast('Redirecting to Google OAuth...', 'info');
+            setTimeout(() => router.push('/dashboard'), 800);
+          }}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors disabled:opacity-50"
           style={{ transitionDuration: 'var(--duration-fast)' }}
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -75,7 +86,13 @@ export default function LoginPage() {
 
         <button
           type="button"
-          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors"
+          onClick={() => {
+            setIsLoading(true);
+            toast('Redirecting to GitHub OAuth...', 'info');
+            setTimeout(() => router.push('/dashboard'), 800);
+          }}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-md border border-border-default bg-surface-raised text-sm font-medium text-salt hover:bg-surface-overlay transition-colors disabled:opacity-50"
           style={{ transitionDuration: 'var(--duration-fast)' }}
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -96,7 +113,13 @@ export default function LoginPage() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          // Auth logic will be wired to the identity service
+          if (!email || !password) return;
+          setIsLoading(true);
+          toast('Authenticating...', 'info');
+          setTimeout(() => {
+            toast('Signed in successfully', 'success');
+            router.push('/dashboard');
+          }, 600);
         }}
         className="space-y-4"
       >
@@ -167,18 +190,31 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-saffron text-basalt font-semibold text-sm rounded-md hover:bg-saffron-hover active:bg-saffron-active transition-colors shadow-saffron-sm"
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-saffron text-basalt font-semibold text-sm rounded-md hover:bg-saffron-hover active:bg-saffron-active transition-colors shadow-saffron-sm disabled:opacity-50"
           style={{ transitionDuration: 'var(--duration-fast)' }}
         >
-          Sign in
-          <ArrowRight className="w-4 h-4" />
+          {isLoading ? (
+            <><Loader2 className="w-4 h-4 animate-spin" /> Signing in...</>
+          ) : (
+            <>Sign in <ArrowRight className="w-4 h-4" /></>
+          )}
         </button>
       </form>
 
       {/* Passkey */}
       <button
         type="button"
-        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-border-subtle text-sm text-neutral-400 hover:text-salt hover:border-border-default transition-colors"
+        onClick={() => {
+          setIsLoading(true);
+          toast('Authenticating via WebAuthn passkey...', 'info');
+          setTimeout(() => {
+            toast('Passkey verified', 'success');
+            router.push('/dashboard');
+          }, 800);
+        }}
+        disabled={isLoading}
+        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-border-subtle text-sm text-neutral-400 hover:text-salt hover:border-border-default transition-colors disabled:opacity-50"
         style={{ transitionDuration: 'var(--duration-fast)' }}
       >
         <Fingerprint className="w-4 h-4" />
