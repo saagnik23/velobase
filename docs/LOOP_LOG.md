@@ -95,3 +95,27 @@ Each iteration ends with a short entry: what failed, what changed.
 - **Docs link (L-01)**: Changed from `https://docs.velora.internal` to `/dashboard/settings`.
 - **Verification Gate**: `next build` passes with 0 errors, all 30 routes compile.
 
+## Slice 5: Production Deployment & Traffic Management
+
+### Phase A — Infrastructure & Traffic Architecture
+- **Traffic Isolation & Ingress Hardening**:
+  - Kubernetes Ingress (`deploy/k8s/base/ingress-and-policies.yaml`) configured with Nginx traffic management: rate limiting (`150 r/s`), burst control (`multiplier 5`), connection caps (`100`), proxy buffer allocation (`128k`), and SSL redirect.
+  - Horizontal Pod Autoscaler (`deploy/k8s/base/hpa-and-pdb.yaml`) configured for 3 to 30 replicas auto-scaling on 70% CPU and 80% Memory with PodDisruptionBudgets (66% minimum availability).
+  - Docker Compose Gateway (`deploy/docker/nginx.conf` and `deploy/docker/docker-compose.yml`) fronted with Nginx reverse proxy with connection limits, gzip compression, and IP-isolated rate limiting (`50r/s`).
+
+### Phase B — Build, CI/CD, & Container Images
+- **Monorepo Build**: Fixed workspace typescript configuration for `@velora/realtime` and `@velora/worker`. Full Turbo pipeline passing across all 5 packages.
+- **GitHub Actions**: Workflows `CI` and `Docker & Kubernetes Deploy` succeeded on `origin main`.
+- **GHCR Registry**: Multi-arch container images published:
+  - `ghcr.io/saagnik23/velobase-web:latest`
+  - `ghcr.io/saagnik23/velobase-api:latest`
+- **K8s Manifest Validation**: Kustomize overlays (`development`, `staging`, `production`) validated.
+
+### Phase C — Production Live Deployment
+- **Edge Deployment**: Next.js web application deployed to Vercel production edge network.
+- **Production URL**: `https://velobase.vercel.app`
+- **Verification**:
+  - `GET /` -> HTTP 200 (Landing page, full brand assets, and interactive demos)
+  - `GET /dashboard` -> HTTP 200 (Full 30-route application operating system dashboard)
+
+
