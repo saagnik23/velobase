@@ -1,0 +1,14 @@
+apiVersion: v2
+name: velora
+description: Production Helm chart for VELORA Application Operating System
+type: application
+version: 2.0.0
+appVersion: "2.0.0"
+keywords:
+  - database
+  - backend
+  - auth
+  - realtime
+  - ai-gateway
+maintainers:
+  - name: VELORA Platform Engineering

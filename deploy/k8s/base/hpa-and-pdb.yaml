@@ -1,0 +1,67 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: velora-web-hpa
+  namespace: velora
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: velora-web
+  minReplicas: 3
+  maxReplicas: 30
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: velora-api-hpa
+  namespace: velora
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: velora-api
+  minReplicas: 3
+  maxReplicas: 30
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: velora-web-pdb
+  namespace: velora
+spec:
+  minAvailable: 66%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: velora-web
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: velora-api-pdb
+  namespace: velora
+spec:
+  minAvailable: 66%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: velora-api

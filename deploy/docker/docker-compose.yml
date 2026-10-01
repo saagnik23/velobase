@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # 1. Web Application & Dashboard (Next.js)
+  web:
+    build:
+      context: ../../
+      dockerfile: deploy/docker/Dockerfile.web
+    container_name: velora-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+      - NEXT_PUBLIC_REALTIME_URL=ws://localhost:4001
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - velora-mesh
+
+  # 2. Unified Edge API Gateway
+  api-gateway:
+    build:
+      context: ../../
+      dockerfile: deploy/docker/Dockerfile.api
+    container_name: velora-api-gateway
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - DATABASE_URL=postgres://postgres:velora_secret@postgres:5432/velora
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - velora-mesh
+
+  # 3. PostgreSQL 17 with pgvector
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: velora-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: velora_secret
+      POSTGRES_DB: velora
+    volumes:
+      - velora_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - velora-mesh
+
+  # 4. Redis Cache & Event Mesh
+  redis:
+    image: redis:7-alpine
+    container_name: velora-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - velora_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - velora-mesh
+
+  # 5. MinIO S3-Compatible Object Storage
+  minio:
+    image: minio/minio:RELEASE.2024-11-07T00-52-28Z
+    container_name: velora-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: velora_admin
+      MINIO_ROOT_PASSWORD: velora_storage_secret
+    command: server /data --console-address ":9001"
+    volumes:
+      - velora_storage:/data
+    networks:
+      - velora-mesh
+
+networks:
+  velora-mesh:
+    driver: bridge
+
+volumes:
+  velora_pgdata:
+  velora_redisdata:
+  velora_storage:

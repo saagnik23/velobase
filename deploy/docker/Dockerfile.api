@@ -1,0 +1,29 @@
+# ==========================================
+# VELORA API Gateway Production Dockerfile
+# ==========================================
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY services/api-gateway/package.json ./
+RUN npm install
+COPY services/api-gateway/ ./
+RUN npm run build
+
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=4000
+
+RUN addgroup --system --gid 1001 velora && \
+    adduser --system --uid 1001 velora
+
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+
+USER velora
+EXPOSE 4000
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
+
+CMD ["node", "dist/index.js"]

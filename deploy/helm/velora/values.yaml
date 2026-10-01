@@ -1,0 +1,81 @@
+global:
+  environment: production
+  domain: velora.internal
+
+web:
+  replicaCount: 3
+  image:
+    repository: ghcr.io/saagnik23/velobase-web
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 80
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 30
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+apiGateway:
+  replicaCount: 3
+  image:
+    repository: ghcr.io/saagnik23/velobase-api
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 4000
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2048Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+postgres:
+  enabled: true
+  image:
+    repository: pgvector/pgvector
+    tag: "pg17"
+  persistence:
+    enabled: true
+    size: 250Gi
+    storageClass: "gp3"
+
+redis:
+  enabled: true
+  architecture: replication
+  replicaCount: 3
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+  hosts:
+    - host: app.velora.internal
+      paths:
+        - path: /
+          pathType: Prefix
+          service: web
+    - host: api.velora.internal
+      paths:
+        - path: /
+          pathType: Prefix
+          service: apiGateway
+  tls:
+    - secretName: velora-tls-cert
+      hosts:
+        - app.velora.internal
+        - api.velora.internal

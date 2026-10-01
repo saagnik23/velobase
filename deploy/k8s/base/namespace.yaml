@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: velora
+  labels:
+    app.kubernetes.io/part-of: velora-platform
+    pod-security.kubernetes.io/enforce: restricted
