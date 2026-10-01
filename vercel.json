@@ -1,6 +1,19 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "buildCommand": "pnpm --filter @velora/brand build && pnpm --filter @velora/web build",
-  "outputDirectory": "apps/web/.next"
+  "services": {
+    "web": {
+      "framework": "nextjs",
+      "root": "apps/web",
+      "buildCommand": "pnpm --filter @velora/brand build && pnpm --filter @velora/web build",
+      "outputDirectory": ".next",
+      "installCommand": "pnpm install --frozen-lockfile"
+    },
+    "api-gateway": {
+      "framework": "express",
+      "root": "services/api-gateway",
+      "buildCommand": "pnpm --filter @velora/api-gateway build",
+      "outputDirectory": "dist",
+      "installCommand": "pnpm install --frozen-lockfile"
+    }
+  }
 }
